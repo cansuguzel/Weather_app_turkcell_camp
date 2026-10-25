@@ -1,8 +1,10 @@
 package com.kampplus.hava.ui.city
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,84 +12,82 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kampplus.hava.model.City
+import com.kampplus.hava.ui.theme.AccentYellow
+import com.kampplus.hava.ui.theme.GlassBorder
+import com.kampplus.hava.ui.theme.GlassFill
 import com.kampplus.hava.ui.theme.HavaTheme
 
-/**
- * Listedeki tek bir şehir satırı.
- *
- * Yapısı: `Card` → `Row` → rozet + `Spacer` + `Column(weight(1f))` + sağ ok.
- *
- * `Modifier.weight(1f)`: ortadaki sütun kalan boşluğun tamamını kaplar, böylece
- * sağ oku sağ kenara iter. Uzun şehir adları (Afyonkarahisar) rozeti ezmez.
- *
- * @param onClick Karta dokunulduğunda çağrılır. Bileşen ne olacağını bilmez,
- *   yalnızca haber verir — olay yukarı, veri aşağı (state hoisting).
- */
 @Composable
 fun CityCard(city: City, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Card(onClick = onClick, modifier = modifier.fillMaxWidth()) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (isPressed) 0.97f else 1f, label = "cityCardScale")
+    Surface(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth().scale(scale),
+        shape = RoundedCornerShape(24.dp),
+        color = GlassFill,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        border = BorderStroke(1.dp, GlassBorder),
+        interactionSource = interactionSource
+    ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            CountryBadge(code = city.countryCode)
-            Column(modifier = Modifier.weight(1f)) {
+            Surface(
+                modifier = Modifier.size(52.dp),
+                shape = RoundedCornerShape(18.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            ) {
+                androidx.compose.foundation.layout.Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = null,
+                        tint = AccentYellow,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+            androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = city.name,
                     style = MaterialTheme.typography.titleMedium,
-                    // Tek satıra sığmayan ad "..." ile kısaltılır, satır kaymaz.
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    text = city.subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (city.subtitle.isNotBlank()) {
+                    Text(
+                        text = city.subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                // Ok yalnızca görseldir; "dokunulabilir" bilgisini Card zaten verir.
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-/**
- * Ülke kodu rozeti ("TR").
- *
- * Veri API'den geldiği için elimizde plaka numarası yok; rozete ülke kodunu
- * koyuyoruz. Kod gelmezse "?" gösterilir.
- */
-@Composable
-private fun CountryBadge(code: String?, modifier: Modifier = Modifier) {
-    Surface(
-        modifier = modifier.size(44.dp),
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = code ?: "?",
-                style = MaterialTheme.typography.labelLarge
             )
         }
     }
@@ -98,15 +98,7 @@ private fun CountryBadge(code: String?, modifier: Modifier = Modifier) {
 private fun CityCardPreview() {
     HavaTheme {
         CityCard(
-            city = City(
-                id = 323786,
-                name = "Ankara",
-                latitude = 39.91987,
-                longitude = 32.85427,
-                countryCode = "TR",
-                country = "Türkiye",
-                admin1 = "Ankara"
-            ),
+            city = City(323786, "Ankara", 39.91987, 32.85427, "TR", "Türkiye", "Ankara"),
             onClick = {}
         )
     }

@@ -14,6 +14,19 @@
     <string name="search_hint">Şehir ara</string>
     <string name="action_clear">Temizle</string>
     <string name="action_retry">Tekrar dene</string>
+    <string name="city_search_title">Şehir Ara</string>
+    <string name="city_search_minimum">Şehirleri bulmak için en az 3 karakter yazın.</string>
+    <string name="city_not_found">Şehir bulunamadı</string>
+    <string name="city_not_found_message">Lütfen yazımı kontrol edin veya başka bir şehir arayın.</string>
+    <string name="city_recommended">ÖNERİLEN ŞEHİRLER</string>
+    <string name="city_suggestion_istanbul">İstanbul</string>
+    <string name="city_suggestion_ankara">Ankara</string>
+    <string name="city_suggestion_izmir">İzmir</string>
+    <string name="city_searching">Sonuçlar aranıyor…</string>
+    <string name="location_hint_title">Konum ipucu</string>
+    <string name="location_hint_message">İlçe veya semt adını ekleyerek aramanızı daraltabilirsiniz.</string>
+    <string name="error_title">Bağlantı hatası</string>
+    <string name="app_credit">Turkcell Hackathon için geliştirildi</string>
 
     <!-- Tahmin ekranı -->
     <string name="detail_title">Hava Tahmini</string>
@@ -24,4 +37,36 @@
     <string name="detail_humidity">Nem</string>
     <string name="detail_wind">Rüzgâr</string>
     <string name="today">Bugün</string>
+    <string name="tab_today">Bugün</string>
+    <string name="tab_week">Hafta</string>
+    <string name="tab_sky">Gökyüzü</string>
+    <string name="forecast_week_title">7 Günlük Tahmin</string>
+    <string name="forecast_sky_title">%1$s · Gökyüzü</string>
+    <string name="forecast_today_summary">Bugün %1$s · %2$s · En yüksek %3$s / En düşük %4$s</string>
+    <string name="high_low_summary">En yüksek %1$s · En düşük %2$s</string>
+    <string name="temperature_degrees">%1$d°</string>
+    <string name="percent_value">%1$d%%</string>
+    <string name="wind_value">%1$d km/sa</string>
+    <string name="forecast_high">En yüksek</string>
+    <string name="forecast_low">En düşük</string>
+    <string name="moon_age">Ay yaşı: %1$d gün</string>
+    <string name="moon_illumination">%1$d%% aydınlık</string>
+    <string name="clothing_title">Kıyafet önerisi</string>
+    <string name="hourly_label">Saatlik Tahmin</string>
+    <string name="forecast_empty">Bu şehir için tahmin bulunamadı.</string>
+    <string name="sky_note_title">Bu ayın gökyüzü</string>
+    <string name="now">Şimdi</string>
+    <string name="splash_title">Hava</string>
+    <string name="home_title">Hava</string>
+    <string name="home_subtitle">Havayı ve gökyüzünü birlikte gör.</string>
+    <string name="home_world_summary">Dünyadan Özet</string>
+    <string name="home_live">Canlı •</string>
+    <string name="home_choose_city">Şehir Seç</string>
+    <string name="home_weather_unavailable">Hava durumu alınamadı</string>
+    <string name="home_high_low">H: %1$s  L: %2$s</string>
+    <string name="tab_details">Detaylar</string>
+    <string name="detail_precipitation">Yağış</string>
+    <string name="detail_uv">UV indeksi</string>
+    <string name="detail_pressure">Hava basıncı</string>
+    <string name="sunrise_sunset">Gün doğumu %1$s · Gün batımı %2$s</string>
 </resources>

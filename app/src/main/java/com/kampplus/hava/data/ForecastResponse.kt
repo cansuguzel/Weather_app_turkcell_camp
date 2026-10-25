@@ -43,7 +43,14 @@ data class CurrentResponse(
     @SerializedName("relative_humidity_2m")
     val relativeHumidity: Int? = null,
     @SerializedName("wind_speed_10m")
-    val windSpeed: Double? = null
+    val windSpeed: Double? = null,
+    @SerializedName("wind_direction_10m")
+    val windDirection: Int? = null,
+    val precipitation: Double? = null,
+    @SerializedName("uv_index")
+    val uvIndex: Double? = null,
+    @SerializedName("surface_pressure")
+    val surfacePressure: Double? = null
 )
 
 data class HourlyResponse(
@@ -65,7 +72,11 @@ data class DailyResponse(
     @SerializedName("temperature_2m_min")
     val temperatureMin: List<Double?>? = null,
     @SerializedName("precipitation_probability_max")
-    val precipitationProbabilityMax: List<Int?>? = null
+    val precipitationProbabilityMax: List<Int?>? = null,
+    @SerializedName("uv_index_max")
+    val uvIndexMax: List<Double?>? = null,
+    val sunrise: List<String?>? = null,
+    val sunset: List<String?>? = null
 )
 
 /**
@@ -91,7 +102,11 @@ private fun CurrentResponse.toCurrentWeather() = CurrentWeather(
     observedAt = LocalDateTime.parse(time),
     apparentTemperatureC = apparentTemperature,
     humidityPercent = relativeHumidity,
-    windSpeedKmh = windSpeed
+    windSpeedKmh = windSpeed,
+    windDirectionDegrees = windDirection,
+    precipitationMm = precipitation,
+    uvIndex = uvIndex,
+    surfacePressureHpa = surfacePressure
 )
 
 /**
@@ -127,7 +142,10 @@ private fun DailyResponse?.toDailyForecasts(): List<DailyForecast> {
             minTemperatureC = min,
             maxTemperatureC = max,
             weatherCode = code,
-            precipitationProbability = precipitationProbabilityMax?.getOrNull(index)
+            precipitationProbability = precipitationProbabilityMax?.getOrNull(index),
+            uvIndexMax = uvIndexMax?.getOrNull(index),
+            sunrise = sunrise?.getOrNull(index)?.let(LocalDateTime::parse),
+            sunset = sunset?.getOrNull(index)?.let(LocalDateTime::parse)
         )
     }
 }

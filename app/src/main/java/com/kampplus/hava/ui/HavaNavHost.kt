@@ -13,9 +13,10 @@ import com.kampplus.hava.model.City
 import com.kampplus.hava.ui.city.CityRoute
 import com.kampplus.hava.ui.forecast.ForecastRoute
 import com.kampplus.hava.ui.forecast.ForecastViewModel
+import com.kampplus.hava.ui.home.HomeRoute
 
 /**
- * Uygulamanın iki ekranı ve aralarındaki geçiş.
+ * Ana sayfa, şehir arama ve tahmin ekranları arasındaki geçiş.
  *
  * Navigation Compose, her ekranı bir "rota" (metin adresi) ile tanımlar. Bir şehre
  * dokunulduğunda adresi üretip [NavHostController.navigate] ile o adrese gideriz;
@@ -29,12 +30,19 @@ import com.kampplus.hava.ui.forecast.ForecastViewModel
 fun HavaNavHost(modifier: Modifier = Modifier, navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = CITY_ROUTE,
+        startDestination = HOME_ROUTE,
         modifier = modifier
     ) {
+        composable(HOME_ROUTE) {
+            HomeRoute(
+                onCitySelected = { item -> navController.navigate(forecastRoute(item.city)) },
+                onChooseCity = { navController.navigate(CITY_ROUTE) }
+            )
+        }
         composable(CITY_ROUTE) {
             CityRoute(
-                onCityClick = { city -> navController.navigate(forecastRoute(city)) }
+                onCityClick = { city -> navController.navigate(forecastRoute(city)) },
+                onBack = { navController.popBackStack() }
             )
         }
         composable(
@@ -66,6 +74,7 @@ fun HavaNavHost(modifier: Modifier = Modifier, navController: NavHostController 
 
 /** Liste ekranının adresi. */
 private const val CITY_ROUTE = "city"
+private const val HOME_ROUTE = "home"
 
 /** Tahmin ekranının adres şablonu; süslü parantezler çalışma anında doldurulur. */
 private const val FORECAST_ROUTE =

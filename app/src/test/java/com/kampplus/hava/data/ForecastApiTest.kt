@@ -126,4 +126,51 @@ class ForecastApiTest {
         // timezone=auto olmazsa zamanlar UTC gelir ve saatler kayar.
         assertTrue("timezone=auto olmali: $path", path.contains("timezone=auto"))
     }
+
+    @Test
+    fun `detay alanlari okunur ve istek alanlari eklenir`() = runTest {
+        server.enqueue(
+            MockResponse().setBody(
+                """
+                {
+                  "current": {
+                    "time": "2026-09-24T11:30",
+                    "temperature_2m": 14.5,
+                    "weather_code": 2,
+                    "wind_direction_10m": 135,
+                    "precipitation": 0.4,
+                    "uv_index": 3.2,
+                    "surface_pressure": 1014.6
+                  },
+                  "daily": {
+                    "time": ["2026-09-24"],
+                    "weather_code": [2],
+                    "temperature_2m_max": [18.1],
+                    "temperature_2m_min": [9.0],
+                    "uv_index_max": [4.8],
+                    "sunrise": ["2026-09-24T06:42"],
+                    "sunset": ["2026-09-24T18:21"]
+                  }
+                }
+                """.trimIndent()
+            )
+        )
+
+        val forecast = fetchForecast()
+        val requestPath = checkNotNull(server.takeRequest().path)
+
+        assertEquals(135, forecast.current.windDirectionDegrees)
+        assertEquals(0.4, checkNotNull(forecast.current.precipitationMm), 0.01)
+        assertEquals(3.2, checkNotNull(forecast.current.uvIndex), 0.01)
+        assertEquals(1014.6, checkNotNull(forecast.current.surfacePressureHpa), 0.01)
+        assertEquals(4.8, checkNotNull(forecast.daily.first().uvIndexMax), 0.01)
+        assertEquals(LocalDateTime.parse("2026-09-24T06:42"), forecast.daily.first().sunrise)
+        assertEquals(LocalDateTime.parse("2026-09-24T18:21"), forecast.daily.first().sunset)
+        assertTrue(requestPath.contains("wind_direction_10m"))
+        assertTrue(requestPath.contains("precipitation"))
+        assertTrue(requestPath.contains("uv_index"))
+        assertTrue(requestPath.contains("surface_pressure"))
+        assertTrue(requestPath.contains("sunrise"))
+        assertTrue(requestPath.contains("sunset"))
+    }
 }

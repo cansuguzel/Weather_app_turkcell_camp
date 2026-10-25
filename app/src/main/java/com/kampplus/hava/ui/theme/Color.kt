@@ -2,29 +2,24 @@ package com.kampplus.hava.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-/**
- * Uygulamanın renk paleti. MaterialTheme sayesinde renkler tek yerden yönetilir.
- *
- * Renkler burada **isimlendirilir**, [Theme] dosyasında açık/koyu temaya dağıtılır.
- * Bileşenler hiçbir zaman buradaki sabitleri doğrudan kullanmaz; `MaterialTheme.colorScheme`
- * üzerinden okur. Böylece tek satır değişince bütün uygulama yeni kıyafetini giyer.
- *
- * İsimlerdeki sayı tonu belirtir: 10 en koyu, 99 en açık.
- */
-internal val Teal10 = Color(0xFF002022)
-internal val Teal20 = Color(0xFF00373A)
-internal val Teal30 = Color(0xFF004F53)
-internal val Teal40 = Color(0xFF00696E)
-internal val Teal80 = Color(0xFF4CD9E0)
-internal val Teal90 = Color(0xFF6FF6FD)
-internal val Amber40 = Color(0xFF8B5000)
-internal val Amber80 = Color(0xFFFFB86E)
-internal val Amber90 = Color(0xFFFFDCBE)
-internal val Neutral10 = Color(0xFF191C1C)
-internal val Neutral90 = Color(0xFFE0E3E3)
-internal val Neutral95 = Color(0xFFEFF1F1)
-internal val Neutral99 = Color(0xFFFAFDFC)
-internal val NeutralVariant30 = Color(0xFF3F4949)
-internal val NeutralVariant90 = Color(0xFFDAE4E5)
-internal val Red40 = Color(0xFFBA1A1A)
-internal val Red80 = Color(0xFFFFB4AB)
+internal val NightBackground = Color(0xFF1B1440)
+internal val NightMid = Color(0xFF2A1B5E)
+internal val NightBottom = Color(0xFF3A2478)
+internal val AccentYellow = Color(0xFFFFC900)
+internal val MainText = Color.White.copy(alpha = 0.87f)
+internal val SecondaryText = Color.White.copy(alpha = 0.60f)
+internal val GlassFill = Color.White.copy(alpha = 0.09f)
+internal val GlassBorder = Color.White.copy(alpha = 0.12f)
+internal val ErrorAccent = Color(0xFFFFA6B6)
+internal val RainTop = Color(0xFF172646)
+internal val RainMid = Color(0xFF26375F)
+internal val RainBottom = Color(0xFF354B75)
+internal val SnowTop = Color(0xFF101A3C)
+internal val SnowMid = Color(0xFF1A2A57)
+internal val SnowBottom = Color(0xFF26396A)
+internal val StormTop = Color(0xFF17102F)
+internal val StormMid = Color(0xFF241745)
+internal val StormBottom = Color(0xFF34205E)
+internal val DaySkyTop = Color(0xFF2E4A8C)
+internal val DaySkyMid = Color(0xFF5B7FC4)
+internal val DaySkyBottom = Color(0xFFE8A66B)

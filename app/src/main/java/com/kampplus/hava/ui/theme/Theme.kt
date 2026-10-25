@@ -1,57 +1,35 @@
 package com.kampplus.hava.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
-/**
- * Açık tema paleti. Her Material rolü ([Color.kt]'deki) bir renge bağlanır:
- * `primary` ana vurgu, `surface` kart zemini, `onSurface` o zemindeki yazı rengidir.
- */
-private val LightColors = lightColorScheme(
-    primary = Teal40,
-    onPrimary = Neutral99,
-    primaryContainer = Teal90,
-    onPrimaryContainer = Teal10,
-    secondary = Amber40,
-    secondaryContainer = Amber90,
-    background = Neutral99,
-    onBackground = Neutral10,
-    surface = Neutral99,
-    onSurface = Neutral10,
-    surfaceVariant = NeutralVariant90,
-    onSurfaceVariant = NeutralVariant30,
-    surfaceContainer = Neutral95,
-    error = Red40
+private val NightColors = darkColorScheme(
+    primary = AccentYellow,
+    onPrimary = Color(0xFF241A00),
+    primaryContainer = Color(0xFF594B24),
+    onPrimaryContainer = AccentYellow,
+    secondary = Color(0xFFC9BFFF),
+    onSecondary = Color(0xFF241A00),
+    background = NightBackground,
+    onBackground = MainText,
+    surface = NightBackground,
+    onSurface = MainText,
+    surfaceVariant = Color(0xFF352F5B),
+    onSurfaceVariant = SecondaryText,
+    surfaceContainer = Color(0xFF1F1945),
+    surfaceContainerHigh = Color(0xFF2A2450),
+    surfaceContainerHighest = Color(0xFF352F5B),
+    error = ErrorAccent,
+    outline = GlassBorder
 )
 
-/** Koyu tema paleti. Aynı roller, koyu zemine uygun tonlarla. */
-private val DarkColors = darkColorScheme(
-    primary = Teal80,
-    onPrimary = Teal20,
-    primaryContainer = Teal30,
-    onPrimaryContainer = Teal90,
-    secondary = Amber80,
-    background = Neutral10,
-    onBackground = Neutral90,
-    surface = Neutral10,
-    onSurface = Neutral90,
-    onSurfaceVariant = NeutralVariant90,
-    error = Red80
-)
-
-/**
- * Uygulamanın teması. Bütün ekranlar bunun içine sarmalanır.
- *
- * @param darkTheme Varsayılan olarak telefonun sistem ayarını izler
- *   ([isSystemInDarkTheme]). @Preview'larda elle `true` verip koyu temayı deneyebilirsin.
- */
 @Composable
-fun HavaTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+@Suppress("UNUSED_PARAMETER")
+fun HavaTheme(darkTheme: Boolean = true, content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
+        colorScheme = NightColors,
         typography = HavaTypography,
         content = content
     )

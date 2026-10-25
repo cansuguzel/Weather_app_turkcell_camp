@@ -11,69 +11,74 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kampplus.hava.ui.theme.HavaTheme
 
-/**
- * Yükleniyor durumunun görünümü.
- *
- * Shimmer, içerik gelmeden önce içeriğin **iskeletini** gösterir ve üzerinden
- * kayan bir ışıltı geçirir. Dönen bir çark yerine bunu tercih ederiz; çünkü
- * kullanıcı ne geleceğini önceden görür ve bekleme daha kısa hissedilir.
- *
- * Shimmer, Compose'a hazır gelmez; aşağıdaki animasyonu kendimiz yazıyoruz.
- */
 @Composable
-fun ShimmerList(modifier: Modifier = Modifier, itemCount: Int = 6) {
+fun ShimmerList(modifier: Modifier = Modifier, itemCount: Int = 3) {
     val brush = shimmerBrush()
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Gerçek kartlarla aynı ölçülerde boş kartlar çizilir.
         repeat(itemCount) {
-            Card(modifier = Modifier.fillMaxWidth()) {
+            GlassCard(modifier = Modifier.fillMaxWidth()) {
                 Row(
-                    modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(52.dp)
-                            .background(brush, RoundedCornerShape(12.dp))
+                            .background(brush, CircleShape)
                     )
                     Column(
-                        modifier = Modifier.padding(start = 12.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(top = 4.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .height(16.dp)
-                                .background(brush, RoundedCornerShape(4.dp))
+                                .fillMaxWidth(0.72f)
+                                .height(18.dp)
+                                .background(brush, RoundedCornerShape(12.dp))
                         )
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.5f)
-                                .height(12.dp)
-                                .background(brush, RoundedCornerShape(4.dp))
+                                .fillMaxWidth(0.44f)
+                                .height(14.dp)
+                                .background(brush, RoundedCornerShape(12.dp))
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.padding(top = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Box(
+                            Modifier
+                                .size(width = 50.dp, height = 18.dp)
+                                .background(brush, RoundedCornerShape(12.dp))
+                        )
+                        Box(
+                            Modifier
+                                .size(width = 32.dp, height = 12.dp)
+                                .background(brush, RoundedCornerShape(12.dp))
                         )
                     }
                 }
@@ -82,27 +87,23 @@ fun ShimmerList(modifier: Modifier = Modifier, itemCount: Int = 6) {
     }
 }
 
-/**
- * Soldan sağa kayan ışıltı efekti.
- *
- * `rememberInfiniteTransition` + `infiniteRepeatable`: bitmeyen bir animasyon kurar.
- * Değişen değer, gradient'in yatay konumudur; her karede biraz sağa kayar.
- */
 @Composable
 private fun shimmerBrush(): Brush {
-    val base = MaterialTheme.colorScheme.surfaceVariant
-    val highlight = MaterialTheme.colorScheme.surface
     val translate by rememberInfiniteTransition(label = "shimmer").animateFloat(
         initialValue = 0f,
         targetValue = SHIMMER_DISTANCE,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1_100, easing = LinearEasing),
+            animation = tween(durationMillis = 1_200, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "shimmerTranslate"
     )
     return Brush.linearGradient(
-        colors = listOf(base, highlight, base),
+        colors = listOf(
+            Color.White.copy(alpha = 0.055f),
+            Color.White.copy(alpha = 0.13f),
+            Color.White.copy(alpha = 0.055f)
+        ),
         start = Offset(translate - SHIMMER_WIDTH, 0f),
         end = Offset(translate, 0f)
     )

@@ -25,7 +25,11 @@ data class CurrentWeather(
     val observedAt: LocalDateTime,
     val apparentTemperatureC: Double? = null,
     val humidityPercent: Int? = null,
-    val windSpeedKmh: Double? = null
+    val windSpeedKmh: Double? = null,
+    val windDirectionDegrees: Int? = null,
+    val precipitationMm: Double? = null,
+    val uvIndex: Double? = null,
+    val surfacePressureHpa: Double? = null
 )
 
 /** Tek bir saatlik tahmin satırı. */
@@ -42,5 +46,8 @@ data class DailyForecast(
     val minTemperatureC: Double,
     val maxTemperatureC: Double,
     val weatherCode: Int,
-    val precipitationProbability: Int? = null
+    val precipitationProbability: Int? = null,
+    val uvIndexMax: Double? = null,
+    val sunrise: LocalDateTime? = null,
+    val sunset: LocalDateTime? = null
 )
