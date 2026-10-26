@@ -36,4 +36,15 @@ class SkyOfTheMonthTest {
         assertThrows(IllegalArgumentException::class.java) { skyNote(0) }
         assertThrows(IllegalArgumentException::class.java) { skyNote(13) }
     }
+
+    @Test
+    fun `gece gokyuzu rehberi ay ve yarimkureye gore yildizlari verir`() {
+        val northernWinter = nightSkyGuide(month = 1, latitude = 41.0)
+        assertEquals("Orion", northernWinter.constellation)
+        assertEquals(listOf("Betelgeuse", "Rigel"), northernWinter.stars)
+
+        val southernSummer = nightSkyGuide(month = 1, latitude = -33.0)
+        assertEquals("Yaz Üçgeni", southernSummer.constellation)
+        assertEquals(listOf("Vega", "Deneb", "Altair"), southernSummer.stars)
+    }
 }

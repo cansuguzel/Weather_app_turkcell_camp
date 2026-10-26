@@ -55,6 +55,9 @@
     <string name="hourly_label">Saatlik Tahmin</string>
     <string name="forecast_empty">Bu şehir için tahmin bulunamadı.</string>
     <string name="sky_note_title">Bu ayın gökyüzü</string>
+    <string name="sky_tonight_title">Bu gece gözlenebilecekler</string>
+    <string name="sky_stars_label">Öne çıkan yıldızlar: %1$s</string>
+    <string name="sky_observation_hint">Görünürlük saate, hava durumuna ve ışık kirliliğine bağlıdır.</string>
     <string name="now">Şimdi</string>
     <string name="splash_title">Hava</string>
     <string name="home_title">Hava</string>

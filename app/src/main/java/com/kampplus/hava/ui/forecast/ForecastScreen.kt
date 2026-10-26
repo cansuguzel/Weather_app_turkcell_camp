@@ -75,7 +75,7 @@ import com.kampplus.hava.model.HourlyForecast
 import com.kampplus.hava.model.MoonPhaseInfo
 import com.kampplus.hava.model.WeatherCondition
 import com.kampplus.hava.model.moonPhase
-import com.kampplus.hava.model.skyNote
+import com.kampplus.hava.model.nightSkyGuide
 import com.kampplus.hava.model.suggest
 import com.kampplus.hava.ui.LoadState
 import com.kampplus.hava.ui.component.ErrorView
@@ -102,6 +102,7 @@ fun ForecastRoute(onBack: () -> Unit, modifier: Modifier = Modifier, viewModel: 
     ForecastScreen(
         cityName = viewModel.cityName,
         subtitle = viewModel.subtitle,
+        latitude = viewModel.latitude,
         uiState = uiState,
         onBack = onBack,
         onRetry = viewModel::onRetry,
@@ -120,6 +121,7 @@ private enum class ForecastTab {
 fun ForecastScreen(
     cityName: String,
     subtitle: String,
+    latitude: Double,
     uiState: LoadState<Forecast>,
     onBack: () -> Unit,
     onRetry: () -> Unit,
@@ -167,7 +169,7 @@ fun ForecastScreen(
                             ForecastTab.TODAY -> TodayContent(uiState.data)
                             ForecastTab.WEEK -> WeekContent(uiState.data)
                             ForecastTab.DETAILS -> DetailsContent(uiState.data)
-                            ForecastTab.SKY -> SkyContent(uiState.data)
+                            ForecastTab.SKY -> SkyContent(uiState.data, latitude)
                         }
                     }
                 }
@@ -262,7 +264,31 @@ private fun TodayContent(forecast: Forecast) {
             }
         }
         StaggeredEntry(index = 1) {
+            ClothingTipCard(current)
+        }
+        StaggeredEntry(index = 2) {
             HourlyForecastCard(current, forecast.hourly)
+        }
+    }
+}
+
+@Composable
+private fun ClothingTipCard(current: CurrentWeather) {
+    GlassCard(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text("🧥", fontSize = 24.sp)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(stringResource(R.string.clothing_title), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = suggest(current.temperatureC, current.weatherCode, current.windSpeedKmh),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -619,10 +645,12 @@ private fun windDirectionLabel(degrees: Int): String {
 }
 
 @Composable
-private fun SkyContent(forecast: Forecast) {
+private fun SkyContent(forecast: Forecast, latitude: Double) {
     val current = forecast.current
     val phase = remember(current.observedAt) { moonPhase(current.observedAt.toLocalDate()) }
-    val (constellation, note) = skyNote(current.observedAt.monthValue)
+    val skyGuide = remember(current.observedAt.monthValue, latitude) {
+        nightSkyGuide(current.observedAt.monthValue, latitude)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -653,30 +681,25 @@ private fun SkyContent(forecast: Forecast) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text("🧥", fontSize = 24.sp)
+                    Text("✦", color = AccentYellow, fontSize = 26.sp)
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(stringResource(R.string.clothing_title), style = MaterialTheme.typography.titleMedium)
+                        Text(stringResource(R.string.sky_tonight_title), style = MaterialTheme.typography.titleMedium)
+                        Text(skyGuide.constellation, style = MaterialTheme.typography.titleMedium, color = AccentYellow)
                         Text(
-                            text = suggest(current.temperatureC, current.weatherCode, current.windSpeedKmh),
+                            text = stringResource(R.string.sky_stars_label, skyGuide.stars.joinToString(", ")),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            skyGuide.note,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    }
-                }
-            }
-        }
-        StaggeredEntry(index = 2) {
-            GlassCard(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text("✦", color = AccentYellow, fontSize = 26.sp)
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(stringResource(R.string.sky_note_title), style = MaterialTheme.typography.titleMedium)
-                        Text(constellation, style = MaterialTheme.typography.titleMedium, color = AccentYellow)
-                        Text(note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            stringResource(R.string.sky_observation_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }
@@ -874,6 +897,7 @@ private fun ForecastScreenPreview() {
         ForecastScreen(
             cityName = "İstanbul",
             subtitle = "İstanbul, Türkiye",
+            latitude = 41.0082,
             uiState = LoadState.Success(
                 Forecast(
                     current = CurrentWeather(
